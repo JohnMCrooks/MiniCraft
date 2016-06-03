@@ -6,6 +6,8 @@ package com.crooks;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -21,6 +23,8 @@ public class Character {
     boolean faceRight;
     static final int WIDTH = 16;
     static final int HEIGHT = 16;
+    Animation walkRight,walkLeft, walkDown,walkUp;
+     TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
     SpriteBatch batch;
 
     public Character( float x, float y, float xv, float yv) {
@@ -129,7 +133,7 @@ public class Character {
         xv = deaccelarate(xv);
     }
 
-    public void boundaryChecker(TextureRegion spriteState){
+    public void boundaryChecker(TextureRegion spriteState, SpriteBatch batch){
 
         if (x >Gdx.graphics.getWidth()){
             x = -14;
@@ -147,6 +151,61 @@ public class Character {
             y = Gdx.graphics.getHeight()-8;
             batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
         }
+    }
+
+    public void drawCharacter(){
+        Texture sheet = new Texture("tiles.png");
+        TextureRegion[][] tiles = TextureRegion.split(sheet,16,16);
+        TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8);
+        testSprite = smallerTiles[1][0];
+        testSprite.setRegionHeight(16);
+        testSprite.setRegionWidth(16);
+
+
+        //Creating the X coordinate mirror for the sprite walking down
+        downSprite = tiles[6][0];
+        downFlip = new TextureRegion(downSprite);
+        downFlip.flip(true,false);
+
+        //Creating the mirrored sprite for walking up;
+        upSprite = tiles[6][1];
+        upflip = new TextureRegion(upSprite);
+        upflip.flip(true,false);
+
+        //define sprite for walking to the right
+        rightSprite = tiles[6][2];
+
+        //initializing the Walking animations
+        walkRight = new Animation(0.2f,rightSprite,tiles[6][3]);
+        walkLeft = new Animation(0.2f,rightSprite, tiles[6][3]);
+        walkUp = new Animation(0.2f, upSprite, upflip);
+        walkDown = new Animation(0.2f, downSprite,downFlip);
+
+    }
+    public TextureRegion returnSpriteState(float time, SpriteBatch batch){
+        TextureRegion spriteState;
+
+        // Setting animation for walking direction based off of velocity
+        if(getXv()>0){
+            spriteState = walkRight.getKeyFrame(time,true);
+        }else if (getXv()<0){
+            spriteState = walkRight.getKeyFrame(time,true);
+        }else if (getYv()>0){
+            spriteState = walkUp.getKeyFrame(time,true);
+        } else if (getYv()<0){
+            spriteState = walkDown.getKeyFrame(time,true);
+        }else{
+            spriteState = downSprite;
+        }
+
+        // Making Right Sprite Face left
+        if (faceRight){
+            batch.draw(spriteState,getX(),getY(), WIDTH *3, HEIGHT*3);
+        }else if(!faceRight){
+            batch.draw(spriteState,(getX() + WIDTH * 3),getY(), WIDTH *-3, HEIGHT*3);
+        }else{}
+        return spriteState;
+
     }
 
 }

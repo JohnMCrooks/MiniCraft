@@ -35,33 +35,34 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 
 		batch = new SpriteBatch();
-		Texture sheet = new Texture("tiles.png");
-		TextureRegion[][] tiles = TextureRegion.split(sheet,16,16);
-		TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8);
-		TextureRegion[][] largerTiles = TextureRegion.split(sheet,24,24);
-		testSprite = smallerTiles[1][0];
-		testSprite.setRegionHeight(16);
-		testSprite.setRegionWidth(16);
-
-
-		//Creating the X coordinate mirror for the sprite walking down
-		downSprite = tiles[6][0];
-		downFlip = new TextureRegion(downSprite);
-		downFlip.flip(true,false);
-
-		//Creating the mirrored sprite for walking up;
-		upSprite = tiles[6][1];
-		upflip = new TextureRegion(upSprite);
-		upflip.flip(true,false);
-
-
-		rightSprite = tiles[6][2];
-
-		//initializing the Walking animations
-		walkRight = new Animation(0.2f,rightSprite,tiles[6][3]);
-		walkLeft = new Animation(0.2f,rightSprite, tiles[6][3]);
-		walkUp = new Animation(0.2f, upSprite, upflip);
-		walkDown = new Animation(0.2f, downSprite,downFlip);
+		p1.drawCharacter();
+//		Texture sheet = new Texture("tiles.png");
+//		TextureRegion[][] tiles = TextureRegion.split(sheet,16,16);
+//		TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8);
+//		TextureRegion[][] largerTiles = TextureRegion.split(sheet,24,24);
+//		testSprite = smallerTiles[1][0];
+//		testSprite.setRegionHeight(16);
+//		testSprite.setRegionWidth(16);
+//
+//
+//		//Creating the X coordinate mirror for the sprite walking down
+//		downSprite = tiles[6][0];
+//		downFlip = new TextureRegion(downSprite);
+//		downFlip.flip(true,false);
+//
+//		//Creating the mirrored sprite for walking up;
+//		upSprite = tiles[6][1];
+//		upflip = new TextureRegion(upSprite);
+//		upflip.flip(true,false);
+//
+//
+//		rightSprite = tiles[6][2];
+//
+//		//initializing the Walking animations
+//		walkRight = new Animation(0.2f,rightSprite,tiles[6][3]);
+//		walkLeft = new Animation(0.2f,rightSprite, tiles[6][3]);
+//		walkUp = new Animation(0.2f, upSprite, upflip);
+//		walkDown = new Animation(0.2f, downSprite,downFlip);
 	}
 
 
@@ -70,34 +71,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		time += Gdx.graphics.getDeltaTime();   //Animations will use this time to calculate frame usage;
 
-		TextureRegion spriteState;
-		if(p1.getXv()>0){
-			spriteState = walkRight.getKeyFrame(time,true);
-		}else if (p1.getXv()<0){
-			spriteState = walkRight.getKeyFrame(time,true);
-		}else if (p1.getYv()>0){
-			spriteState = walkUp.getKeyFrame(time,true);
-		} else if (p1.getYv()<0){
-			spriteState = walkDown.getKeyFrame(time,true);
-		}else{
-			spriteState = downSprite;
-		}
-
 		Gdx.gl.glClearColor(.1f, .8f, .5f, 0.9f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-		mapBuilder(random);
+		//mapBuilder(random);
 		p1.move();
-
-		// Making right, Face left
-		if (p1.faceRight){
-			batch.draw(spriteState,p1.getX(),p1.getY(), p1.WIDTH *3, p1.HEIGHT*3);
-		}else if(!p1.faceRight){
-			batch.draw(spriteState,(p1.getX() + p1.WIDTH * 3),p1.getY(), p1.WIDTH *-3, p1.HEIGHT*3);
-		}else{}
-
-		p1.boundaryChecker(spriteState);
+		p1.boundaryChecker(p1.returnSpriteState(time, batch), batch);
 
 		batch.end();
 	}
@@ -105,11 +85,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		int x = random(0,750);
 		return x;
 	}
-	public void mapBuilder(int random){
+	/*public void mapBuilder(int random){
 		batch.draw(testSprite,random,random2);
-		batch.draw(testSprite,random,random2-20);
+		batch.draw(testSprite,random,random2-30);
 
 	}
+	*/
 	//Setting Wall Boundaries so Character appears on opposite side - A la PacMan
 //	public void boundaryChecker(TextureRegion spriteState){
 //
