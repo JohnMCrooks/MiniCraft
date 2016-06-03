@@ -99,13 +99,13 @@ public class Character {
         }
         duration -=time;
         if (duration <=0){
-            hasPath =false;
+            hasPath = false;
         }
         return velocity;
     }
 
     public void move() {
-
+        if (!hasPath)
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             yv = MAX_VELOCITY;
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
