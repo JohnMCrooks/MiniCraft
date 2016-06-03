@@ -16,7 +16,7 @@ import static com.badlogic.gdx.math.MathUtils.random;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	float x,y,xv,yv;
+	//float x,y,xv,yv;    //Testing a refactor
 	int random = randomize();
 	int random2 = randomize();
 	static final int WIDTH = 16;
@@ -67,17 +67,17 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		move();
+
 		time += Gdx.graphics.getDeltaTime();   //Animations will use this time to calculate frame usage;
 
 		TextureRegion spriteState;
-		if(xv>0){
+		if(p1.getXv()>0){
 			spriteState = walkRight.getKeyFrame(time,true);
-		}else if (xv<0){
+		}else if (p1.getXv()<0){
 			spriteState = walkRight.getKeyFrame(time,true);
-		}else if (yv>0){
+		}else if (p1.getYv()>0){
 			spriteState = walkUp.getKeyFrame(time,true);
-		} else if (yv<0){
+		} else if (p1.getYv()<0){
 			spriteState = walkDown.getKeyFrame(time,true);
 		}else{
 			spriteState = downSprite;
@@ -88,15 +88,16 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		batch.begin();
 		mapBuilder(random);
+		p1.move();
+
 		// Making right, Face left
-		if (faceRight){
-			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
-		}else if(!faceRight){
-			batch.draw(spriteState,(x + WIDTH * 3),y, WIDTH *-3, HEIGHT*3);
+		if (p1.faceRight){
+			batch.draw(spriteState,p1.getX(),p1.getY(), p1.WIDTH *3, p1.HEIGHT*3);
+		}else if(!p1.faceRight){
+			batch.draw(spriteState,(p1.getX() + p1.WIDTH * 3),p1.getY(), p1.WIDTH *-3, p1.HEIGHT*3);
 		}else{}
 
-
-		boundaryChecker(spriteState);
+		p1.boundaryChecker(spriteState);
 
 		batch.end();
 	}
@@ -110,75 +111,75 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	}
 	//Setting Wall Boundaries so Character appears on opposite side - A la PacMan
-	public void boundaryChecker(TextureRegion spriteState){
-
-		if (x >Gdx.graphics.getWidth()){
-			x = -14;
-			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
-		}
-		if(x<-16){
-			x= Gdx.graphics.getWidth()-2;
-			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
-		}
-		if (y >Gdx.graphics.getHeight()){
-			y = -8;
-			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
-		}
-		if(y<-16){
-			y = Gdx.graphics.getHeight()-8;
-			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
-		}
-	}
-
-
-	public void move(){
-
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-			yv = MAX_VELOCITY;
-			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				yv=p1.accelerate(yv);
-			}
-
-		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-			yv= -MAX_VELOCITY;
-			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				yv=p1.accelerate(yv);
-			}
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-			xv = -MAX_VELOCITY;
-			faceRight = false;
-			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				xv=p1.accelerate(xv);
-			}
-		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-			xv = MAX_VELOCITY;
-			faceRight = true;
-			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				xv=p1.accelerate(xv);
-			}
-		}
-		float delta = Gdx.graphics.getDeltaTime();
-		y += yv*delta;
-		x += xv*delta;
-		yv = deaccelarate(yv);
-		xv = deaccelarate(xv);
+//	public void boundaryChecker(TextureRegion spriteState){
+//
+//		if (x >Gdx.graphics.getWidth()){
+//			x = -14;
+//			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
+//		}
+//		if(x<-16){
+//			x= Gdx.graphics.getWidth()-2;
+//			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
+//		}
+//		if (y >Gdx.graphics.getHeight()){
+//			y = -8;
+//			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
+//		}
+//		if(y<-16){
+//			y = Gdx.graphics.getHeight()-8;
+//			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
+//		}
+//	}
 
 
-	}
+//	public void move(){
+//
+//		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+//			yv = MAX_VELOCITY;
+//			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+//				yv=p1.accelerate(yv);
+//			}
+//
+//		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+//			yv= -MAX_VELOCITY;
+//			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+//				yv=p1.accelerate(yv);
+//			}
+//		}
+//		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+//			xv = -MAX_VELOCITY;
+//			faceRight = false;
+//			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+//				xv=p1.accelerate(xv);
+//			}
+//		}
+//		else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+//			xv = MAX_VELOCITY;
+//			faceRight = true;
+//			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+//				xv=p1.accelerate(xv);
+//			}
+//		}
+//		float delta = Gdx.graphics.getDeltaTime();
+//		y += yv*delta;
+//		x += xv*delta;
+//		yv = p1.deaccelarate(yv);
+//		xv = p1.deaccelarate(xv);
+//
+//
+//	}
 
 //	public float accelerate(float velocity){
 //		velocity *= acceleration;
 //		return velocity;
 //	}
 
-	public float deaccelarate(float velocity){
-		velocity *= decelaration;
-		if (Math.abs(velocity)<1){
-			velocity = 0;
-		}
-		return velocity;
-	}
+//	public float deaccelarate(float velocity){
+//		velocity *= decelaration;
+//		if (Math.abs(velocity)<1){
+//			velocity = 0;
+//		}
+//		return velocity;
+//	}
 
 }
