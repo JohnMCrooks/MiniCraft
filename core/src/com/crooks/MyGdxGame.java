@@ -28,6 +28,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	boolean faceRight;
 	Animation walkRight,walkLeft, walkDown,walkUp;
 	Character p1 = new Character();
+	Character p2 = new Character();
+	Zombie z1 = new Zombie();
 
 	TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
 
@@ -36,6 +38,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		batch = new SpriteBatch();
 		p1.drawCharacter();
+		z1.drawCharacter();
+
 //		Texture sheet = new Texture("tiles.png");
 //		TextureRegion[][] tiles = TextureRegion.split(sheet,16,16);
 //		TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8);
@@ -76,8 +80,10 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		batch.begin();
 		//mapBuilder(random);
-		p1.move();
+		//p1.move();
+		z1.move();
 		p1.boundaryChecker(p1.returnSpriteState(time, batch), batch);
+		z1.boundaryChecker(z1.returnSpriteState(time,batch), batch);
 
 		batch.end();
 	}
