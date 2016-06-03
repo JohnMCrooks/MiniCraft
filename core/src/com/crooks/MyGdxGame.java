@@ -3,9 +3,11 @@ package com.crooks;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -19,27 +21,24 @@ public class MyGdxGame extends ApplicationAdapter {
 	//float x,y,xv,yv;    //Testing a refactor
 	int random = randomize();
 	int random2 = randomize();
-	static final int WIDTH = 16;
-	static final int HEIGHT = 16;
-	static final float decelaration = .50f; //How quickly the character comes to a stop where [0 =< N <= 1]
-	static final float acceleration = 3f;  	//SpaceBar modifier for speed.
-	static final float MAX_VELOCITY = 100;  // initial movement speed
 	float time;
-	boolean faceRight;
-	Animation walkRight,walkLeft, walkDown,walkUp;
 	Character p1 = new Character();
-	Character p2 = new Character();
 	Zombie z1 = new Zombie();
-
+	Zombie z2 = new Zombie();
+	Zombie z3 = new Zombie();
 	TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
+	BitmapFont font;
 
 	@Override
 	public void create () {
-
 		batch = new SpriteBatch();
+		font = new BitmapFont();
+		font.setColor(Color.BLACK);
+
 		p1.drawCharacter();
 		z1.drawCharacter();
-
+		z2.drawCharacter();
+		z3.drawCharacter();
 //		Texture sheet = new Texture("tiles.png");
 //		TextureRegion[][] tiles = TextureRegion.split(sheet,16,16);
 //		TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8);
@@ -69,7 +68,6 @@ public class MyGdxGame extends ApplicationAdapter {
 //		walkDown = new Animation(0.2f, downSprite,downFlip);
 	}
 
-
 	@Override
 	public void render () {
 
@@ -79,11 +77,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-		//mapBuilder(random);
-		//p1.move();
+		font.draw(batch,"Welcome to Zombieland - Don't get too close, they bite",250,700);
+		p1.move();
 		z1.move();
+		z2.move();
+		z3.move();
 		p1.boundaryChecker(p1.returnSpriteState(time, batch), batch);
 		z1.boundaryChecker(z1.returnSpriteState(time,batch), batch);
+		z2.boundaryChecker(z2.returnSpriteState(time,batch), batch);
+		z3.boundaryChecker(z3.returnSpriteState(time,batch), batch);
 
 		batch.end();
 	}
@@ -91,12 +93,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		int x = random(0,750);
 		return x;
 	}
-	/*public void mapBuilder(int random){
+	public void mapBuilder(int random){
 		batch.draw(testSprite,random,random2);
 		batch.draw(testSprite,random,random2-30);
 
 	}
-	*/
 	//Setting Wall Boundaries so Character appears on opposite side - A la PacMan
 //	public void boundaryChecker(TextureRegion spriteState){
 //

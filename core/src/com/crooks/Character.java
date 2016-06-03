@@ -20,12 +20,13 @@ public class Character {
     static final float acceleration = 3f;  	//SpaceBar modifier for speed.
     static final float MAX_VELOCITY = 100;  // initial movement speed
     float time;
-    boolean faceRight;
+    boolean faceRight, hasPath;
     static final int WIDTH = 16;
     static final int HEIGHT = 16;
     Animation walkRight,walkLeft, walkDown,walkUp;
      TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
     SpriteBatch batch;
+    float duration;
 
     public Character( float x, float y, float xv, float yv) {
 
@@ -95,6 +96,10 @@ public class Character {
         velocity *= decelaration;
         if (Math.abs(velocity)<1){
             velocity = 0;
+        }
+        duration -=time;
+        if (duration <=0){
+            hasPath =false;
         }
         return velocity;
     }

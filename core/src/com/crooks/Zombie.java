@@ -26,6 +26,7 @@ public class Zombie {
     Animation walkRight,walkLeft, walkDown,walkUp;
     TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
     SpriteBatch batch;
+    boolean duration;
 
     public Zombie( float x, float y, float xv, float yv) {
 
@@ -37,48 +38,34 @@ public class Zombie {
     }
     public Zombie() {
     }
-
     public float getX() {
         return x;
     }
-
-
     public float getY() {
         return y;
     }
-
-
     public float getXv() {
         return xv;
     }
-
-
     public float getYv() {
         return yv;
     }
-
-
     public static float getDecelaration() {
         return decelaration;
     }
-
     public static float getAcceleration() {
         return acceleration;
     }
-
     public static float getMaxVelocity() {
         return MAX_VELOCITY;
     }
-
     public float getTime() {
         return time;
     }
-
     public float accelerate(float velocity){
         velocity *= acceleration;
         return velocity;
     }
-
     public float deaccelarate(float velocity){
         velocity *= decelaration;
         if (Math.abs(velocity)<1){
@@ -86,41 +73,37 @@ public class Zombie {
         }
         return velocity;
     }
-
     public void move() {
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            yv = MAX_VELOCITY;
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                yv = accelerate(yv);
+            if (getRandomNum() > 0) {
+                yv = MAX_VELOCITY;
+                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                    yv = accelerate(yv);
+                }
+            } else if (getRandomNum() < 0) {
+                yv = -MAX_VELOCITY;
+                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                    yv = accelerate(yv);
+                }
             }
-
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            yv = -MAX_VELOCITY;
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                yv = accelerate(yv);
+            if (getRandomNum() > 0) {
+                xv = -MAX_VELOCITY;
+                faceRight = false;
+                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                    xv = accelerate(xv);
+                }
+            } else if (getRandomNum() > 0) {
+                xv = MAX_VELOCITY;
+                faceRight = true;
+                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                    xv = accelerate(xv);
+                }
             }
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            xv = -MAX_VELOCITY;
-            faceRight = false;
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                xv = accelerate(xv);
-            }
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            xv = MAX_VELOCITY;
-            faceRight = true;
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                xv = accelerate(xv);
-            }
-        }
         float delta = Gdx.graphics.getDeltaTime();
         y += yv * delta;
         x += xv * delta;
         yv = deaccelarate(yv);
         xv = deaccelarate(xv);
     }
-
     public void boundaryChecker(TextureRegion spriteState, SpriteBatch batch){
 
         if (x >Gdx.graphics.getWidth()){
@@ -170,6 +153,7 @@ public class Zombie {
         walkDown = new Animation(0.2f, downSprite,downFlip);
 
     }
+
     public TextureRegion returnSpriteState(float time, SpriteBatch batch){
         TextureRegion spriteState;
 
@@ -194,6 +178,19 @@ public class Zombie {
         }else{}
         return spriteState;
 
+    }
+
+    public double getRandomNum(){
+        double tempVal = Math.random();
+        double positive = Math.random();
+
+
+        tempVal = (tempVal *1000)%5;
+        if (positive <0.5d){
+            tempVal = tempVal*-1;
+            return tempVal;
+        }
+        return tempVal;
     }
 
 }
