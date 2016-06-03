@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,8 @@ import static com.badlogic.gdx.math.MathUtils.random;
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	float x,y,xv,yv;
+	int random = randomize();
+	int random2 = randomize();
 	static final int WIDTH = 16;
 	static final int HEIGHT = 16;
 	static final float decelaration = .50f; //How quickly the character comes to a stop where [0 =< N <= 1]
@@ -24,6 +27,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	float time;
 	boolean faceRight;
 	Animation walkRight,walkLeft, walkDown,walkUp;
+	Character p1 = new Character();
 
 	TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
 
@@ -60,11 +64,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		walkDown = new Animation(0.2f, downSprite,downFlip);
 	}
 
+
 	@Override
 	public void render () {
 		move();
 		time += Gdx.graphics.getDeltaTime();   //Animations will use this time to calculate frame usage;
-
 
 		TextureRegion spriteState;
 		if(xv>0){
@@ -81,8 +85,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		Gdx.gl.glClearColor(.1f, .8f, .5f, 0.9f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		batch.begin();
-		mapBuilder();
+		mapBuilder(random);
 		// Making right, Face left
 		if (faceRight){
 			batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
@@ -90,17 +95,21 @@ public class MyGdxGame extends ApplicationAdapter {
 			batch.draw(spriteState,(x + WIDTH * 3),y, WIDTH *-3, HEIGHT*3);
 		}else{}
 
-		//Setting Wall Boundaries so Character appears on opposite side - A la PacMan
+
 		boundaryChecker(spriteState);
 
 		batch.end();
 	}
-	public void mapBuilder(){
-		batch.draw(testSprite,random(10,750),random(10,750),400,40,30,30,10,20,0,false);
-		batch.draw(testSprite,200,240);
-		batch.draw(testSprite,240,200);
+	public int randomize(){
+		int x = random(0,750);
+		return x;
 	}
+	public void mapBuilder(int random){
+		batch.draw(testSprite,random,random2);
+		batch.draw(testSprite,random,random2-20);
 
+	}
+	//Setting Wall Boundaries so Character appears on opposite side - A la PacMan
 	public void boundaryChecker(TextureRegion spriteState){
 
 		if (x >Gdx.graphics.getWidth()){
@@ -121,32 +130,33 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 	}
 
+
 	public void move(){
 
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
 			yv = MAX_VELOCITY;
 			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				yv=accelerate(yv);
+				yv=p1.accelerate(yv);
 			}
 
 		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
 			yv= -MAX_VELOCITY;
 			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				yv=accelerate(yv);
+				yv=p1.accelerate(yv);
 			}
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
 			xv = -MAX_VELOCITY;
 			faceRight = false;
 			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				xv=accelerate(xv);
+				xv=p1.accelerate(xv);
 			}
 		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
 			xv = MAX_VELOCITY;
 			faceRight = true;
 			if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-				xv=accelerate(xv);
+				xv=p1.accelerate(xv);
 			}
 		}
 		float delta = Gdx.graphics.getDeltaTime();
@@ -158,10 +168,10 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	}
 
-	public float accelerate(float velocity){
-		velocity *= acceleration;
-		return velocity;
-	}
+//	public float accelerate(float velocity){
+//		velocity *= acceleration;
+//		return velocity;
+//	}
 
 	public float deaccelarate(float velocity){
 		velocity *= decelaration;
