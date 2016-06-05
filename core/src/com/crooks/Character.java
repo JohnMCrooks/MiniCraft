@@ -17,14 +17,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Character {
     float x,y,xv,yv;
     static final float decelaration = .50f;
-    static final float acceleration = 3f;  	//SpaceBar modifier for speed.
+    static final float acceleration = 3f;  	// SpaceBar modifier for speed.
     static final float MAX_VELOCITY = 100;  // initial movement speed
     float time;
     boolean faceRight, hasPath;
     static final int WIDTH = 16;
     static final int HEIGHT = 16;
     Animation walkRight,walkLeft, walkDown,walkUp;
-     TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
+    TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite;
     SpriteBatch batch;
     float duration;
 
@@ -138,6 +138,7 @@ public class Character {
         xv = deaccelarate(xv);
     }
 
+    // If character runs off the screen, loop it to the opposite side
     public void boundaryChecker(TextureRegion spriteState, SpriteBatch batch){
 
         if (x >Gdx.graphics.getWidth()){
@@ -161,8 +162,8 @@ public class Character {
     public void drawCharacter(){
         Texture sheet = new Texture("tiles.png");
         TextureRegion[][] tiles = TextureRegion.split(sheet,16,16);
-        TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8);
-        testSprite = smallerTiles[1][0];
+        //TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8); // unnecessary since I have created a seperate class for objects besides characters
+        testSprite = tiles[1][0];
         testSprite.setRegionHeight(16);
         testSprite.setRegionWidth(16);
 
@@ -180,7 +181,7 @@ public class Character {
         //define sprite for walking to the right
         rightSprite = tiles[6][2];
 
-        //initializing the Walking animations
+        //initializing the Walking animations using the tiles created above
         walkRight = new Animation(0.2f,rightSprite,tiles[6][3]);
         walkLeft = new Animation(0.2f,rightSprite, tiles[6][3]);
         walkUp = new Animation(0.2f, upSprite, upflip);
@@ -200,7 +201,7 @@ public class Character {
         } else if (getYv()<0){
             spriteState = walkDown.getKeyFrame(time,true);
         }else{
-            spriteState = downSprite;
+            spriteState = downSprite;   //If not in motion, face down.
         }
 
         // Making Right Sprite Face left

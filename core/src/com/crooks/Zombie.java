@@ -16,9 +16,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class Zombie {
     float x,y,xv,yv;
-    static final float decelaration = .50f;
-    static final float acceleration = 3f;  	//SpaceBar modifier for speed.
-    static final float MAX_VELOCITY = 100;  // initial movement speed
+    int duration = 10;
+    static final float decelaration = .99f;
+    static final float acceleration = 2f;  	//SpaceBar modifier for speed.
+    static final float MAX_VELOCITY = 50;  // initial movement speed
     float time;
     boolean faceRight;
     static final int WIDTH = 16;
@@ -26,7 +27,7 @@ public class Zombie {
     Animation walkRight,walkLeft, walkDown,walkUp;
     TextureRegion rightSprite,upSprite, upflip,downSprite,downFlip,testSprite, largeTest;
     SpriteBatch batch;
-    boolean duration;
+    boolean hasDuration = false;
 
     public Zombie( float x, float y, float xv, float yv) {
 
@@ -74,30 +75,38 @@ public class Zombie {
         return velocity;
     }
     public void move() {
-            if (getRandomNum() > 0) {
-                yv = MAX_VELOCITY;
-                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                    yv = accelerate(yv);
-                }
-            } else if (getRandomNum() < 0) {
-                yv = -MAX_VELOCITY;
-                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                    yv = accelerate(yv);
-                }
-            }
-            if (getRandomNum() > 0) {
-                xv = -MAX_VELOCITY;
-                faceRight = false;
-                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                    xv = accelerate(xv);
-                }
-            } else if (getRandomNum() > 0) {
-                xv = MAX_VELOCITY;
-                faceRight = true;
-                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                    xv = accelerate(xv);
-                }
-            }
+        //Movement based on a Randomly Calculated number... Still Needs improvement to smooth out the twitch
+           if (!hasDuration) {              // On the first call there is no duration so that the zombies will begin moving immediately.
+               if (getRandomNum() > 0) {    //This if statement controls Left/Right movement
+                   yv = MAX_VELOCITY;
+                   hasDuration = true;      //after movement has been executed, change the state of duration to true
+                   duration = 25;           // set the duration to a length that seems appropriate, in this case it's 25 frames worth
+                   --duration;              // iterate duration
+               } else if (getRandomNum() < 0) {
+                   yv = -MAX_VELOCITY;
+                   hasDuration = true;
+                   duration = 25;
+                   --duration;
+               }
+               if (getRandomNum() > 0) {  // this if controls Up/Down movement.
+                   xv = -MAX_VELOCITY;
+                   faceRight = false;
+                   hasDuration = true;
+                   duration = 25;
+                   --duration;
+               } else if (getRandomNum() > 0) {
+                   xv = MAX_VELOCITY;
+                   faceRight = true;
+                   hasDuration = true;
+                   duration = 25;
+                   --duration;
+               }
+           } else{                      // If Duration is true, Iterate duration down. This prevents twitch movements
+               --duration;
+               if (duration==0){
+                   hasDuration = false;
+               }
+           }
         float delta = Gdx.graphics.getDeltaTime();
         y += yv * delta;
         x += xv * delta;
