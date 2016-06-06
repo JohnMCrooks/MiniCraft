@@ -137,10 +137,8 @@ public class Character {
         yv = deaccelarate(yv);
         xv = deaccelarate(xv);
     }
-
     // If character runs off the screen, loop it to the opposite side
     public void boundaryChecker(TextureRegion spriteState, SpriteBatch batch){
-
         if (x >Gdx.graphics.getWidth()){
             x = -14;
             batch.draw(spriteState,x,y, WIDTH *3, HEIGHT*3);
@@ -162,11 +160,6 @@ public class Character {
     public void drawCharacter(){
         Texture sheet = new Texture("tiles.png");
         TextureRegion[][] tiles = TextureRegion.split(sheet,16,16);
-        //TextureRegion[][] smallerTiles = TextureRegion.split(sheet,8,8); // unnecessary since I have created a seperate class for objects besides characters
-        testSprite = tiles[1][0];
-        testSprite.setRegionHeight(16);
-        testSprite.setRegionWidth(16);
-
 
         //Creating the X coordinate mirror for the sprite walking down
         downSprite = tiles[6][0];
@@ -211,7 +204,5 @@ public class Character {
             batch.draw(spriteState,(getX() + WIDTH * 3),getY(), WIDTH *-3, HEIGHT*3);
         }else{}
         return spriteState;
-
     }
-
 }

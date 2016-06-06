@@ -2,6 +2,7 @@ package com.crooks;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -43,6 +44,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+			Gdx.app.exit();
+		}
 		font.draw(batch,"Welcome to Zombieland - Don't get too close, they bite",250,700);
 
 		p1.move();
