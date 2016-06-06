@@ -29,14 +29,6 @@ public class Zombie {
     SpriteBatch batch;
     boolean hasDuration = false;
 
-    public Zombie( float x, float y, float xv, float yv) {
-
-        this.time = getTime();
-        this.x = x;
-        this.y = y;
-        this.xv = xv;
-        this.yv = yv;
-    }
     public Zombie() {
     }
     public float getX() {
@@ -51,22 +43,7 @@ public class Zombie {
     public float getYv() {
         return yv;
     }
-    public static float getDecelaration() {
-        return decelaration;
-    }
-    public static float getAcceleration() {
-        return acceleration;
-    }
-    public static float getMaxVelocity() {
-        return MAX_VELOCITY;
-    }
-    public float getTime() {
-        return time;
-    }
-    public float accelerate(float velocity){
-        velocity *= acceleration;
-        return velocity;
-    }
+
     public float deaccelarate(float velocity){
         velocity *= decelaration;
         if (Math.abs(velocity)<1){

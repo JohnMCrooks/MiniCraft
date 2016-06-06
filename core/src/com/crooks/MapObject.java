@@ -78,7 +78,7 @@ public class MapObject {
         return treeArray;
     }
 
-
+    // creating a body of water on the map
     public void drawWaterObject(SpriteBatch batch){
         Texture sheet = new Texture("tiles.png");
         TextureRegion[][] tile = TextureRegion.split(sheet, 16, 16);
